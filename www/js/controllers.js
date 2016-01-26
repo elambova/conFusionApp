@@ -217,6 +217,7 @@ app.controller('AboutController', function ($scope, corporateFactory, baseURL) {
 });
 
 app.controller('FavoritesController', function ($scope, menuFactory, favoriteFactory, baseURL, $ionicListDelegate) {
+
     $scope.baseURL = baseURL;
     $scope.shouldShowDelete = false;
 
@@ -225,10 +226,10 @@ app.controller('FavoritesController', function ($scope, menuFactory, favoriteFac
     $scope.dishes = menuFactory.getDishes().query(
             function (response) {
                 $scope.dishes = response;
-                $scope.showMenu = true;
-            }, function (response) {
-        $scope.message = 'Error: ' + response.status + ' ' + response.statusText;
-    });
+            },
+            function (response) {
+                $scope.message = "Error: " + response.status + " " + response.statusText;
+            });
     console.log($scope.dishes, $scope.favorites);
 
     $scope.toggleDelete = function () {
@@ -244,12 +245,10 @@ app.controller('FavoritesController', function ($scope, menuFactory, favoriteFac
 app.filter('favoriteFilter', function () {
     return function (dishes, favorites) {
         var out = [];
-
         for (var i = 0; i < favorites.length; i++) {
             for (var j = 0; j < dishes.length; j++) {
-                if (dishes[j].id === favorites[i].id) {
+                if (dishes[j].id === favorites[i].id)
                     out.push(dishes[j]);
-                }
             }
         }
         return out;
