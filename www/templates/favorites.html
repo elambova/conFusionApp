@@ -9,7 +9,8 @@
     <ion-content>
         <ion-list show-delete="shouldShowDelete">
             <ion-item ng-repeat="dish in dishes | favoriteFilter: favorites" 
-                href="#/app/menu/{{dish.id}}" class="item-thumbnail-left">
+                href="#/app/menu/{{dish.id}}" class="item-thumbnail-left"
+                on-swipe-left="deleteFavorite(dish.id)">
                 <img ng-src="{{baseURL+dish.image}}" alt="{{dish.name}}"/>
                 <h2>
                     {{dish.name}}
