@@ -48,10 +48,6 @@ services.factory('favoriteFactory', function ($resource, baseURL) {
         favorites.push({id: index});
     };
 
-    favoriteFactory.getFavorites = function () {
-        return favorites;
-    };
-
     favoriteFactory.deleteFromFavorites = function (index) {
         for (var i = 0; i < favorites.length; i++) {
             if (favorites[i].id === index) {
@@ -59,6 +55,11 @@ services.factory('favoriteFactory', function ($resource, baseURL) {
             }
         }
     };
+
+    favoriteFactory.getFavorites = function () {
+        return favorites;
+    };
+    
     return favoriteFactory;
 });
 
