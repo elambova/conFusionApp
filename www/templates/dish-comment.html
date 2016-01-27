@@ -12,7 +12,7 @@
             <div class="list">
                 <label class="item item-input item-select">
                     <span class="input-label">Rating</span>
-                    <select ng-model="comment.rating">
+                    <select ng-model="newComment.rating">
                         <option ng-repeat="n in [1, 2, 3, 4, 5]" value="{{n}}">
                             {{n}}
                         </option>
@@ -20,11 +20,11 @@
                 </label>
                 <label class="item item-input">
                     <span class="input-label">Your Name</span>
-                    <input type="text" ng-model="comment.author"/>
+                    <input type="text" ng-model="newComment.author"/>
                 </label>
                 <label class="item item-input">
                     <span class="input-label">Your Comment</span>
-                    <textarea ng-model="comment.comment"></textarea>
+                    <textarea ng-model="newComment.comment"></textarea>
                 </label>
                 <label class="item">
                     <button class="button button-block button-positive" type="submit">
