@@ -149,13 +149,13 @@ app.controller('FeedbackController', function ($scope, feedbackFactory) {
     };
 });
 
-app.controller('DishDetailController', function ($scope, $stateParams, menuFactory, baseURL, $ionicPopover, $ionicModal, favoriteFactory, $ionicListDelegate, $timeout) {
+app.controller('DishDetailController', function ($scope, $stateParams, menuFactory, baseURL, $ionicPopover, $ionicModal, $ionicLoading, favoriteFactory, $ionicListDelegate, $timeout) {
 
     $scope.baseURL = baseURL;
     $scope.dish = {};
     $scope.showDish = false;
     $scope.message = "Loading ...";
-    $scope.comment = {};
+    $scope.newComment = {};
 
     $scope.dish = menuFactory.getDishes()
             .get({id: parseInt($stateParams.id, 10)})
@@ -197,16 +197,20 @@ app.controller('DishDetailController', function ($scope, $stateParams, menuFacto
     $scope.comment = function () {
         $scope.modal.show();
     };
-    
+
     $scope.doComment = function () {
-        $scope.comment.date = new Date().toISOString();
-        $scope.dish.comments.push($scope.comment);
+        $ionicLoading.show({
+            template: '<ion-spinner></ion-spinner> Sending...'
+        });
+        $scope.newComment.date = new Date().toISOString();
+        $scope.dish.comments.push($scope.newComment);
         menuFactory.getDishes().update({id: $scope.dish.id}, $scope.dish);
         $timeout(function () {
+            $ionicLoading.hide();
             $scope.closeComment();
-        }, 500);
+        }, 1000);
     };
-    
+
     $scope.addFavorite = function () {
         favoriteFactory.addToFavorites($scope.dish.id);
         $ionicListDelegate.closeOptionButtons();
