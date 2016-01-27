@@ -5,37 +5,27 @@ var services = angular.module('conFusion.services', ['ngResource']);
 services.constant("baseURL", "http://192.168.0.100:3000/");
 
 services.service('menuFactory', function ($resource, baseURL) {
-    var promotions = [
-        {
-            _id: 0,
-            name: 'Weekend Grand Buffet',
-            image: 'images/buffet.png',
-            label: 'New',
-            price: '19.99',
-            description: 'Featuring mouthwatering combinations with a choice of five different salads, six enticing appetizers, six main entrees and five choicest desserts. Free flowing bubbly and soft drinks. All for just $19.99 per person '
+    return $resource(baseURL + "dishes/:id", null, {
+        'update': {
+            method: 'PUT'
         }
-    ];
-
-    this.getDishes = function () {
-        return $resource(baseURL + "dishes/:id", null, {'update': {method: 'PUT'}});
-    };
-
-    // implement a function named getPromotion
-    // that returns a selected promotion.
-    this.getPromotion = function () {
-        return $resource(baseURL + "promotions/:id");
-    };
+    });
 });
 
-services.factory('corporateFactory', function ($resource, baseURL) {
+services.service('promotionFactory', function ($resource, baseURL) {
+    return $resource(baseURL + "promotions/:id");
+
+});
+
+services.service('corporateFactory', function ($resource, baseURL) {
     return $resource(baseURL + "leadership/:id");
 });
 
-services.factory('feedbackFactory', function ($resource, baseURL) {
+services.service('feedbackFactory', function ($resource, baseURL) {
     return $resource(baseURL + "feedback/:id");
 });
 
-services.factory('favoriteFactory', function ($resource, baseURL) {
+services.service('favoriteFactory', function ($resource, baseURL) {
     var favoriteFactory = {};
     var favorites = [];
 
@@ -59,7 +49,23 @@ services.factory('favoriteFactory', function ($resource, baseURL) {
     favoriteFactory.getFavorites = function () {
         return favorites;
     };
-    
+
     return favoriteFactory;
 });
 
+services.factory('$localStorage', function ($window) {
+    return {
+        store: function (key, value) {
+            $window.localStorage[key] = value;
+        },
+        get: function (key, defaultValue) {
+            return $window.localStorage[key] || defaultValue;
+        },
+        storeObject: function (key, value) {
+            $window.localStorage[key] = JSON.stringify(value);
+        },
+        getObject: function (key, defaultValue) {
+            return JSON.parse($window.localStorage[key] || defaultValue);
+        }
+    };
+});
