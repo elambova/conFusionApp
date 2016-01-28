@@ -4,7 +4,7 @@ var services = angular.module('conFusion.services', ['ngResource']);
 
 services.constant("baseURL", "http://192.168.0.100:3000/");
 
-services.service('menuFactory', function ($resource, baseURL) {
+services.factory('menuFactory', function ($resource, baseURL) {
     return $resource(baseURL + "dishes/:id", null, {
         'update': {
             method: 'PUT'
@@ -12,22 +12,22 @@ services.service('menuFactory', function ($resource, baseURL) {
     });
 });
 
-services.service('promotionFactory', function ($resource, baseURL) {
+services.factory('promotionFactory', function ($resource, baseURL) {
     return $resource(baseURL + "promotions/:id");
 
 });
 
-services.service('corporateFactory', function ($resource, baseURL) {
+services.factory('corporateFactory', function ($resource, baseURL) {
     return $resource(baseURL + "leadership/:id");
 });
 
-services.service('feedbackFactory', function ($resource, baseURL) {
+services.factory('feedbackFactory', function ($resource, baseURL) {
     return $resource(baseURL + "feedback/:id");
 });
 
-services.service('favoriteFactory', function ($resource, baseURL) {
+services.factory('favoriteFactory', function ($localStorage) {
     var favoriteFactory = {};
-    var favorites = [];
+    var favorites = $localStorage.getObject('favorites', '[]');
 
     favoriteFactory.addToFavorites = function (index) {
         for (var i = 0; i < favorites.length; i++) {
@@ -35,15 +35,19 @@ services.service('favoriteFactory', function ($resource, baseURL) {
                 return;
             }
         }
+
         favorites.push({id: index});
+        $localStorage.storeObject('favorites', favorites);
     };
 
     favoriteFactory.deleteFromFavorites = function (index) {
         for (var i = 0; i < favorites.length; i++) {
             if (favorites[i].id === index) {
                 favorites.splice(i, 1);
+                $localStorage.storeObject('favorites', favorites);
             }
         }
+        ;
     };
 
     favoriteFactory.getFavorites = function () {
