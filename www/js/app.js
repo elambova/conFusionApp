@@ -62,7 +62,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                             promotion: function (promotionFactory) {
                                 return promotionFactory.get({id: 0});
                             },
-                            corporate: function (corporateFactory) {
+                            leader: function (corporateFactory) {
                                 return corporateFactory.get({id: 3});
                             }
                         }
@@ -75,7 +75,12 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 views: {
                     'mainContent': {
                         templateUrl: 'templates/aboutus.html',
-                        controller: 'AboutController'
+                        controller: 'AboutController',
+                        resolve: {
+                            leaders: function (corporateFactory) {
+                                return corporateFactory.query();
+                            }
+                        }
                     }
                 }
             })
@@ -131,7 +136,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                                 return menuFactory.query(function () {
                                     $timeout(function () {
                                         $ionicLoading.hide();
-                                    }, 1000);
+                                    }, 500);
                                 });
                             },
                             favorites: function (favoriteFactory) {
