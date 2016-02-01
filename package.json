@@ -22,7 +22,8 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "de.appplant.cordova.plugin.local-notification",
-    "org.apache.cordova.camera"
+    "org.apache.cordova.camera",
+    "cordova-plugin-vibration"
   ],
   "cordovaPlatforms": [
     "android"
