@@ -108,7 +108,7 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
             };
             $cordovaCamera.getPicture(options)
                     .then(function (imageData) {
-                        $scope.registration.imgSrc = 'data:image/jpeg;base64' + imageData;
+                        $scope.registration.imgSrc = "data:image/jpeg;base64," + imageData;
                     }, function (error) {
                         console.log(error);
                     });
@@ -118,17 +118,11 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
             var options = {
                 quality: 50,
                 destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-                allowEdit: true,
-                encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 100,
-                targetHeight: 100,
-                popoverOptions: CameraPopoverOptions,
-                saveToPhotoAlbum: false
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             };
             $cordovaCamera.getPicture(options)
                     .then(function (imageData) {
-                        $scope.registration.imgSrc = 'data:image/jpeg;base64' + imageData;
+                        $scope.registration.imgSrc = "data:image/jpeg;base64," + imageData;
                     }, function (error) {
                         console.log(error);
                     });
@@ -249,7 +243,7 @@ app.controller('FavoritesController', function ($scope, favorites,
         confirmPopup.then(function (res) {
             if (res) {
                 console.log('Ok to delete');
-                $cordovaVibration.vibrate(100);
+                $cordovaVibration.vibrate(400);
                 favoriteFactory.deleteFromFavorites(index);
             } else {
                 console.log('Canceled delete');
