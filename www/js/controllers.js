@@ -173,7 +173,8 @@ app.controller('FavoritesController', function ($scope, favorites,
 });
 
 app.controller('MenuController', function ($scope, dishes, favoriteFactory,
-        baseURL, $ionicListDelegate) {
+        baseURL, $ionicListDelegate, $ionicPlatform, $cordovaLocalNotification,
+        $cordovaToast) {
     $scope.baseURL = baseURL;
     $scope.tab = 1;
     $scope.filtText = '';
@@ -211,6 +212,23 @@ app.controller('MenuController', function ($scope, dishes, favoriteFactory,
     $scope.addFavorite = function (index) {
         favoriteFactory.addToFavorites(index);
         $ionicListDelegate.closeOptionButtons();
+        $ionicPlatform.ready(function () {
+            $cordovaLocalNotification.schedule({
+                id: 1,
+                title: 'Added Favorite',
+                text: $scope.dishes[index].name
+            }).then(function () {
+                console.log('Added Favorite ' + $scope.dishes[index].name);
+            }, function () {
+                console.log('Failed to add Favorite ');
+            });
+            $cordovaToast.show('added Favorite ' + $scope.dishes[index].name, 'long', 'center')
+                    .then(function (success) {
+
+                    }, function (error) {
+
+                    });
+        });
     };
 });
 
