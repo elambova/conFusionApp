@@ -88,40 +88,59 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
 
     // Perform the register action when the user submits the register form
     $scope.doRegister = function () {
-        $ionicLoading.show({
-            template: '<ion-spinner class="spinner-energized"></ion-spinner> Registering...'
-        });
         $timeout(function () {
-            $ionicLoading.hide();
             $scope.closeRegister();
         }, 2000);
     };
     $ionicPlatform.ready(function () {
-        var options = {
-            quality: 50,
-            destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: Camera.PictureSourceType.CAMERA,
-            allowEdit: true,
-            encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 100,
-            targetHeight: 100,
-            popoverOptions: CameraPopoverOptions,
-            saveToPhotoAlbum: false
-        };
+
         $scope.takePicture = function () {
+            var options = {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 100,
+                targetHeight: 100,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false
+            };
             $cordovaCamera.getPicture(options)
                     .then(function (imageData) {
-                        $scope.reservation.imgSrc = 'data:image/jpeg;base64' + imageData;
+                        $scope.registration.imgSrc = 'data:image/jpeg;base64' + imageData;
                     }, function (error) {
                         console.log(error);
                     });
+            $scope.registerModal.show();
+        };
+        $scope.choosePhoto = function () {
+            var options = {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 100,
+                targetHeight: 100,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false
+            };
+            $cordovaCamera.getPicture(options)
+                    .then(function (imageData) {
+                        $scope.registration.imgSrc = 'data:image/jpeg;base64' + imageData;
+                    }, function (error) {
+                        console.log(error);
+                    });
+            $scope.registerModal.show();
         };
     });
 });
 
 app.controller('DishDetailController', function ($scope, dish, baseURL,
         menuFactory, $ionicPopover, $ionicModal, $ionicLoading, favoriteFactory,
-        $timeout, $localStorage) {
+        $timeout, $localStorage, $ionicPlatform, $cordovaLocalNotification,
+        $cordovaToast) {
 //    $scope.showDish = false;
 //    $scope.message = "Loading ...";
     $scope.baseURL = baseURL;
@@ -177,17 +196,33 @@ app.controller('DishDetailController', function ($scope, dish, baseURL,
         }, 2000);
     };
 
-
     // Add the selected dish to 'My favorite' page 
     $scope.addFavorite = function () {
         favoriteFactory.addToFavorites($scope.dish.id);
         $scope.closePopover();
+        $ionicPlatform.ready(function () {
+            $cordovaLocalNotification.schedule({
+                id: 1,
+                title: 'Added Favorite',
+                text: $scope.dish.name
+            }).then(function () {
+                console.log('Added Favorite ' + $scope.dish.name);
+            }, function () {
+                console.log('Failed to add Favorite ');
+            });
+            $cordovaToast.show('Added Favorite ' + $scope.dish.name, 'long', 'bottom')
+                    .then(function (success) {
+                        console.log(success);
+                    }, function (error) {
+                        console.log(error);
+                    });
+        });
     };
 });
 
 app.controller('FavoritesController', function ($scope, favorites,
         dishes, favoriteFactory, baseURL, $ionicPopup,
-        $ionicLoading) {
+        $ionicLoading, $cordovaVibration) {
     $scope.baseURL = baseURL;
     $scope.shouldShowDelete = false;
 
@@ -214,6 +249,7 @@ app.controller('FavoritesController', function ($scope, favorites,
         confirmPopup.then(function (res) {
             if (res) {
                 console.log('Ok to delete');
+                $cordovaVibration.vibrate(100);
                 favoriteFactory.deleteFromFavorites(index);
             } else {
                 console.log('Canceled delete');
