@@ -1,12 +1,15 @@
+/* global CameraPopoverOptions, Camera */
+
 "use strict'";
 
 var app = angular.module('conFusion.controllers', []);
 
 app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
-        $localStorage, $ionicLoading) {
+        $localStorage, $ionicLoading, $ionicPlatform, $cordovaCamera) {
     // Form data for the login modal
     $scope.loginData = $localStorage.getObject('userinfo', '{}');
     $scope.reservation = {};
+    $scope.registration = {};
 
     // Create the login modal that we will use later
     $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -23,6 +26,13 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
         $scope.reserveModal = modal;
     });
 
+    // Create the register modal that we will use later
+    $ionicModal.fromTemplateUrl('templates/register.html', {
+        scope: $scope
+    }).then(function (modal) {
+        $scope.registerModal = modal;
+    });
+
     // Open the login modal
     $scope.login = function () {
         $scope.loginModal.show();
@@ -33,6 +43,11 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
         $scope.reserveModal.show();
     };
 
+    // Open the register modal
+    $scope.register = function () {
+        $scope.registerModal.show();
+    };
+
     // Triggered in the login modal to close it
     $scope.closeLogin = function () {
         $scope.loginModal.hide();
@@ -41,6 +56,11 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
     // Triggered in the login modal to close it
     $scope.closeReserve = function () {
         $scope.reserveModal.hide();
+    };
+
+    // Triggered in the register modal to close it
+    $scope.closeRegister = function () {
+        $scope.registerModal.hide();
     };
 
     // Perform the login action when the user submits the login form
@@ -65,6 +85,38 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
             $scope.closeReserve();
         }, 2000);
     };
+
+    // Perform the register action when the user submits the register form
+    $scope.doRegister = function () {
+        $ionicLoading.show({
+            template: '<ion-spinner class="spinner-energized"></ion-spinner> Registering...'
+        });
+        $timeout(function () {
+            $ionicLoading.hide();
+            $scope.closeRegister();
+        }, 2000);
+    };
+    $ionicPlatform.ready(function () {
+        var options = {
+            quality: 50,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            allowEdit: true,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: 100,
+            targetHeight: 100,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false
+        };
+        $scope.takePicture = function () {
+            $cordovaCamera.getPicture(options)
+                    .then(function (imageData) {
+                        $scope.reservation.imgSrc = 'data:image/jpeg;base64' + imageData;
+                    }, function (error) {
+                        console.log(error);
+                    });
+        };
+    });
 });
 
 app.controller('DishDetailController', function ($scope, dish, baseURL,
@@ -222,7 +274,7 @@ app.controller('MenuController', function ($scope, dishes, favoriteFactory,
             }, function () {
                 console.log('Failed to add Favorite ');
             });
-            $cordovaToast.show('added Favorite ' + $scope.dishes[index].name, 'long', 'center')
+            $cordovaToast.show('Added Favorite ' + $scope.dishes[index].name, 'long', 'top')
                     .then(function (success) {
 
                     }, function (error) {
