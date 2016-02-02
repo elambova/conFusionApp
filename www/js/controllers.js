@@ -3,13 +3,12 @@
 "use strict'";
 
 var app = angular.module('conFusion.controllers', []);
-
 app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
         $localStorage, $ionicLoading, $ionicPlatform, $cordovaCamera) {
     // Form data for the login modal
     $scope.loginData = $localStorage.getObject('userinfo', '{}');
     $scope.reservation = {};
-    $scope.registration = {};
+    $scope.registration = $localStorage.getObject('registerinfo', '{}');
 
     // Create the login modal that we will use later
     $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -88,6 +87,7 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
 
     // Perform the register action when the user submits the register form
     $scope.doRegister = function () {
+        $localStorage.storeObject('registerinfo', $scope.registration);
         $timeout(function () {
             $scope.closeRegister();
         }, 2000);
@@ -104,11 +104,11 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
                 targetWidth: 100,
                 targetHeight: 100,
                 popoverOptions: CameraPopoverOptions,
-                saveToPhotoAlbum: false
+                saveToPhotoAlbum: true
             };
             $cordovaCamera.getPicture(options)
                     .then(function (imageData) {
-                        $scope.registration.imgSrc = "data:image/jpeg;base64," + imageData;
+                        $scope.registration.imgSrc = "data:image/jpeg;base64, " + imageData;
                     }, function (error) {
                         console.log(error);
                     });
@@ -118,7 +118,8 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
             var options = {
                 quality: 50,
                 destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                encodingType: Camera.EncodingType.JPEG
             };
             $cordovaCamera.getPicture(options)
                     .then(function (imageData) {
