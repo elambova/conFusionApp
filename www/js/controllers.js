@@ -119,7 +119,9 @@ app.controller('AppCtrl', function ($scope, $ionicModal, $timeout,
                 quality: 50,
                 destinationType: Camera.DestinationType.DATA_URL,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-                encodingType: Camera.EncodingType.JPEG
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 100,
+                targetHeight: 100
             };
             $cordovaCamera.getPicture(options)
                     .then(function (imageData) {
