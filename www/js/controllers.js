@@ -219,7 +219,7 @@ app.controller('DishDetailController', function ($scope, dish, baseURL,
 
 app.controller('FavoritesController', function ($scope, favorites,
         dishes, favoriteFactory, baseURL, $ionicPopup,
-        $ionicLoading, $cordovaVibration) {
+        $ionicLoading, $cordovaVibration, $ionicPlatform) {
     $scope.baseURL = baseURL;
     $scope.shouldShowDelete = false;
 
@@ -246,7 +246,9 @@ app.controller('FavoritesController', function ($scope, favorites,
         confirmPopup.then(function (res) {
             if (res) {
                 console.log('Ok to delete');
-                $cordovaVibration.vibrate(400);
+                $ionicPlatform.ready(function () {
+                    $cordovaVibration.vibrate(400);
+                });
                 favoriteFactory.deleteFromFavorites(index);
             } else {
                 console.log('Canceled delete');
