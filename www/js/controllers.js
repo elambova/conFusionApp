@@ -352,15 +352,40 @@ app.controller('AboutController', function ($scope, leaders, baseURL) {
     $scope.leaders = leaders;
 });
 
-app.controller('ContactController', function ($scope) {
-
-    $scope.feedback = {mychannel: "", firstName: "", lastName: "", agree: false, email: ""};
-
+app.controller('ContactController', function ($scope, $ionicModal, $timeout, feedbackFactory) {
+    $scope.feedback = {};
     var channels = [{value: "tel", label: "Tel."}, {value: "Email", label: "Email"}];
-
     $scope.channels = channels;
     $scope.invalidChannelSelection = false;
 
+    $ionicModal.fromTemplateUrl('templates/feedback.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.feedbackModal = modal;
+    });
+
+    $scope.addFeedback = function () {
+        $scope.feedbackModal.show();
+    };
+
+    $scope.closeFeedback = function () {
+        $scope.feedbackModal.hide();
+    };
+
+    $scope.doFeedback = function () {
+        if ($scope.feedback.agree && ($scope.feedback.mychannel === "")) {
+            $scope.invalidChannelSelection = true;
+            alert('incorrect');
+        } else {
+            $scope.invalidChannelSelection = false;
+            console.log($scope.feedback);
+            feedbackFactory.save($scope.feedback);
+        }
+        $timeout(function () {
+            $scope.closeFeedback();
+        }, 1000);
+    };
 });
 
 app.controller('FeedbackController', function ($scope, feedbackFactory) {
