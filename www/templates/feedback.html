@@ -1,0 +1,57 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">Feedback</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeFeedback()">
+                Close
+            </button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <form id="feedbackForm" name="feedbackForm" ng-submit="doFeedback()">
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label">First Name</span>
+                    <input type="text" ng-model="feedback.firstName"/>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Last Name</span>
+                    <input type="text" ng-model="feedback.lastName"/>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input type="email" ng-model="feedback.email"/>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Tel.</span>
+                    <span class="input-group-addon">(</span>
+                    <input type="tel" class="col-25" id="areacode" name="areacode"
+                           placeholder="Area code" ng-model="feedback.tel.areacode">
+                    <span class="input-group-addon">)</span>
+                    <input type="tel" class="col-50" ng-model="feedback.tel.number" id="telnum" name="telnum"
+                           placeholder="Tel. number">
+                </label>
+                <label class="item item-input item-checkbox">
+                    <span class="input-label">May we contact you?</span>
+                    <input type="checkbox" ng-model="feedback.agree"/>
+                </label>
+                <label class="item item-input item-select" ng-show="feedback.agree">
+                    <span class="input-label">Choice</span>
+                    <select ng-model="feedback.mychannel"
+                            ng-options="channel.value as channel.label for channel in channels">
+                        <option value="">Tel. or Email?</option>
+                    </select>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Your Feedback</span>
+                    <textarea type="email" ng-model="feedback.comments" rows="5"></textarea>
+                </label>
+                <label class="item">
+                    <button class="button button-block button-positive" type="submit">
+                        Send Feedback
+                    </button>
+                </label>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>
