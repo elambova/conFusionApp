@@ -374,14 +374,19 @@ app.controller('ContactController', function ($scope, $ionicModal, $timeout, fee
     };
 
     $scope.doFeedback = function () {
-        if ($scope.feedback.agree && ($scope.feedback.mychannel === "")) {
-            $scope.invalidChannelSelection = true;
-            alert('incorrect');
-        } else {
-            $scope.invalidChannelSelection = false;
-            console.log($scope.feedback);
-            feedbackFactory.save($scope.feedback);
+        if ($scope.feedback.tel.areacode.length <= 5 && $scope.feedback.tel.number.length <= 10) {
+            if ($scope.feedback.agree && ($scope.feedback.mychannel === "")) {
+                $scope.invalidChannelSelection = true;
+                alert('incorrect');
+            } else {
+                $scope.invalidChannelSelection = false;
+                console.log($scope.feedback);
+                feedbackFactory.save($scope.feedback);
+            }
+        } else{
+            alert('Phone number is too long!');
         }
+
         $timeout(function () {
             $scope.closeFeedback();
         }, 1000);
