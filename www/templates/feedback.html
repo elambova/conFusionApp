@@ -24,16 +24,14 @@
                 </label>
                 <label class="item item-input">
                     <span class="input-label">Tel.</span>
-                    <span class="input-group-addon">(</span>
                     <input type="tel" class="col-25" id="areacode" name="areacode"
                            placeholder="Area code" ng-model="feedback.tel.areacode">
-                    <span class="input-group-addon">)</span>
+                    <span class="input-group-addon">/</span>
                     <input type="tel" class="col-50" ng-model="feedback.tel.number" id="telnum" name="telnum"
                            placeholder="Tel. number">
                 </label>
-                <label class="item item-input item-checkbox">
-                    <span class="input-label">May we contact you?</span>
-                    <input type="checkbox" ng-model="feedback.agree"/>
+                <label>
+                    <ion-checkbox ng-model="feedback.agree" class="checkbox-royal">May we contact you?</ion-checkbox>
                 </label>
                 <label class="item item-input item-select" ng-show="feedback.agree">
                     <span class="input-label">Choice</span>
